@@ -617,8 +617,31 @@ func appDat(token string,apppId string,i int){
 	appData := &AppDetail{}
 	defer resp.Body.Close()
 		json.NewDecoder(resp.Body).Decode(appData)
+		out, err := json.Marshal(appData)
+    if err != nil {
+        panic (err)
+    }
+
+    fmt.Println(string(out))
 		fmt.Println("appdata :")
 		fmt.Println(appData)
+		if appData.DATA.APPLICATION.STATUSNAME == "Feasibility Approved with Applied Capacity"{
+client, ctx, cancel, err := connect(MongoDb)
+    			if err != nil {
+    			    panic(err)
+    			}
+    			defer close(client, ctx, cancel)
+			ping(client,ctx)
+	filter22 := bson.M{"_id":autos[i].Id}
+	 update22 := bson.D{{Key: "$set", Value: bson.M{"status":4} }}
+    result22, err := UpdateOne(client, ctx, "surya", "autos", filter22, update22)
+	if err != nil {
+        panic(err)
+    }
+    // fmt.Println("update single document")
+    fmt.Println(result22.ModifiedCount)
+	fmt.Print("Completed Sucessfully")
+		}else{
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -857,7 +880,7 @@ func appDat(token string,apppId string,i int){
 	fmt.Print("Completed Sucessfully")
 }	
 	
-
+}
 
 
 		
